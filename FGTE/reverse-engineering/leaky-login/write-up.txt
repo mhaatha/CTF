@@ -1,0 +1,10 @@
+Awalnya aku bingung bagaimana cara menyelesaikan soal ini. Kemudian aku iseng untuk mencari tutorial reverse engineering di internet dan aku memilih situs https://0xinfection.xyz untuk aku belajar.
+
+Namun, pada situs https://0xinfection.xyz terlalu banyak teori yang dijelaskan dan tidak relevan untuk tujuanku saat ini yaitu: menyelesaikan soal CTF level mudah. Aku tidak bisa memikirkan bagaimana caranya belajar tanpa adanya praktek, karena di situs tersebut terlalu banyak teori dan sedikit prakteknya.
+
+Kemudian aku bertanya ke Gemini AI, mengenai kasusku ini. Kemudian dia menyarankan jika ingin menyelesaikan soal CTF reverse engineering level mudah, cukup coba 3 perintah di bawah ini:
+1. strings
+2. ltrace
+3. strace
+
+Aku mencoba perintah yang pertama yaitu `strings leaky_login` dan muncul output sangat panjang yang belum aku pahami. Karena outputnya terlalu panjang, aku mencoba untuk menjalankan perintah `strings leaky_login | grep FGTE` untuk mencari apakah di output yang sangat panjang tersebut ada sebuah kalimat berawalan FGTE dan muncul hasilnya yaitu: {"user":"admin","pass":"letmein123","flag":"FGTE{REVERSE_LOGIN_LEAK}"}
