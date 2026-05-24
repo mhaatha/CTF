@@ -1,0 +1,7 @@
+Instruksinya sudah sangat jelas, yaitu bagaimana cara melihat isi register eax di akhir fungsi main.
+
+Awalnya aku mencoba untuk menggunakan tiga perintah dasar untuk menyelesaikan soal easy yang direkomendasikan oleh AI, yaitu strings, ltrace, dan strace. Namun tidak ada yang berhasil.
+
+Kemudian aku mencoba untuk mendisassembler file binary nya menggunakan Ghidra. Pada function main, terdapat jawaban flag untuk soal ini, yaitu return 0x8793.
+
+0x8793 merupakan sebuah angka hexadecimal. Pada soal, jawaban meminta angka desimal, jadi angka 0x8793 yang merupakan hexadecimal, diubah menjadi decimal menjadi 34707. Flagnya adalah FGTE{34707}
