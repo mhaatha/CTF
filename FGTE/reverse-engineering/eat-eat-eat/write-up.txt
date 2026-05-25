@@ -1,0 +1,34 @@
+Input harus:
+- Memiliki panjang 9
+- 3 string pertama harus merupakan digit
+- 2 string terakhir harus merupakan digit
+- String antara 3 di awal dan 2 terakhir
+
+1. 89198mcxz792
+2. Eat998m
+eateat = E89a19t8m9cx9z7892
+
+FirstCalledFunction:
+- Variable eateat di dalam function MainFunction memiliki 19 length yang disusun oleh:
+1. 2[0]
+2. 1[0]
+3. 1[1]
+4. 2[1]
+5. 1[2]
+6. 1[3]
+7. 2[2]
+8. 1[4]
+9. 1[5]
+10. 2[3]
+11. 1[6]
+12. 1[7]
+13. 2[4]
+14. 1[8]
+15. 1[9]
+16. 2[5]
+17. 1[10]
+18. 1[11]
+19.
+- Jika ingin mendapatkan flagnya, variable eateat harus berupa E10a23t9090t9ae0140
+
+Ya aku coba coba aja sih, aku coba setiap input, supaya menghasilkan eateat = E10a23t9090t9ae0140 dan dapatlah flagnya: FGTE{eat_python_341eat009} dengan input 341eat009
