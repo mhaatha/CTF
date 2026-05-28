@@ -1,0 +1,9 @@
+Seperti biasa, aku menjalankan strings, strace dan ltrace. Namun sudah bisa ketebak hasilnya nihil. Untuk soal easy ke atas sepertinya sudah tidak relevan lagi di platform ini untuk menggunakan 3 perintah di atas.
+
+Aku mencoba untuk melihat function apa saja yang ada pada program, aku langsung tertarik pada FUN_00101350 di mana function ini dipanggil oleh sebuah function yaitu FUN_00101120. Pada function FUN_00101120, terdapat sebuah logika if else sederhana di mana jika iVar1 yaitu variabel yang memanggil function FUN_00101350 menghasilkan angka tidak sama dengan 0, maka function FUN_00101120 akan memanggil sebuah function untuk menggenerate flagnya.
+
+Awalnya aku berpikir untuk melihat dan memahami code dari function FUN_00101350, setelah cukup lama membaca dan mencoba untuk memahami, aku tetap tidak paham dan memiliki kesimpulan bahwa function ini mereturn sebuah value yaitu 0 di mana jika function ini mereturn value 0, maka logika if else pada function FUN_00101120 yang memanggil function FUN_00101350 akan selalu gagal. Mengetahui hal ini, aku mencoba untuk mengotak-atik function FUN_00101350 selama 2 hari dan tidak menghasilkan apapun.
+
+Mencoba untuk move on, aku kembali ke function FUN_00101120 dan mencoba untuk menghapus logika if else nya dengan tujuan supaya function ini langsung memanggil function yang menggenerate flagnya. Namun, ketika aku mencoba untuk menghapus logika if else nya, ketika program dijalankan, ternyata muncul error yaitu [1]    12911 segmentation fault (core dumped).
+
+Aku bertanya ke ChatGPT mengapa muncul error seperti itu, dan jawabannya adalah ketika aku mengubah test rax,rax menjadi test rax,1 itu artinya aku mengubah logika pembentukan flags secara fundamental. Namun ketika aku mengubah logika if else nya, dari yang tadinya jz menjadi jnz, aku hanya membalik keputusan branch nya dan hal tersebut tidak akan mengakibatkan error.
