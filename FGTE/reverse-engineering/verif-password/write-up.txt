@@ -1,0 +1,9 @@
+Diberikan sebuah file 'verif' yang merupakan sebuah file executable. Ketika dijalankan, program tersebut akan meminta user untuk "Enter password: " yang jika password tersebut tidak tepat, maka akan muncul error.
+
+Aku langsung menganalisisnya di aplikasi Ghidra. Aku mulai mencari di bagian code mana yang terdapat printable character "Enter password: " namun, aku tidak dapat menemukan printable character tersebut dan malah menemukan sebuah codebase yang sangat besar yang kemungkinan berisi sebuah library di Python.
+
+Aku mulai menjalankan command strings chall | grep -i pyinstaller untuk mengetahui apakah file tersebut adalah PyInstaller dan ternyata benar saja.
+
+Kemudian aku mulai mencari write up di search engine dengan keyword "pyinstaller reverse engineering ctf" dan mulai mengamati bagaimana cara menghandle file PyInstaller.
+
+Langkah pertama yang aku lakukan adalah pergi ke web https://pyinstxtractor-web.netlify.app/ untuk mengextract file challenge nya. Kemudian hasilnya yaitu berupa chall.pyc aku upload di python decompiler online dan ternyata password yang tepat untuk ini adalah open_sesame dan aku berhasil menemukan flagnya.
