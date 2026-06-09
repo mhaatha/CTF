@@ -1,0 +1,29 @@
+const _0xcrypto = {
+  _0xkey1: 90,
+  _0xkey2: 63,
+  _0xiv: [18, 52, 86, 120],
+};
+function _0xencrypt(_0xdata) {
+  const _0xresult = [];
+  for (let _0xi = 0; _0xi < _0xdata.length; _0xi++) {
+    _0xresult.push(_0xdata.charCodeAt(_0xi) ^ _0xcrypto._0xkey1);
+  }
+  return _0xresult;
+}
+function _0xdecrypt(_0xarr) {
+  let _0xstr = "";
+  for (let _0xi = 0; _0xi < _0xarr.length; _0xi++) {
+    _0xstr += String.fromCharCode(_0xarr[_0xi] ^ _0xcrypto._0xkey1);
+  }
+  return _0xstr;
+}
+const _0xfakeData = [47, 41, 59, 40, 122, 31, 63, 58, 60, 47];
+function _0xgetFakeFlag() {
+  return _0xdecrypt(_0xfakeData);
+}
+window._0xcryptoHelper = {
+  encrypt: _0xencrypt,
+  decrypt: _0xdecrypt,
+  getFlag: _0xgetFakeFlag,
+};
+window.getFlagData = _0xgetFakeFlag;

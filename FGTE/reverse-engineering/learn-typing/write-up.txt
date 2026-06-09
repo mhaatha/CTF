@@ -1,0 +1,25 @@
+Diberikan sebuah web typing challenge yang di dalamnya memiliki 7 file javascript yang dapat dilihat.
+
+Pada sebagian file javascript tersebut, memuat code yang mengenerate flag decoy. Namun yang jadi perhatian utama di sini adalah, syarat untuk mendapatkan flag.
+
+Gunakan command ini di console untuk mengambil function-function yang diawali dengan 0x
+Object.getOwnPropertyNames(window)
+  .filter(x => x.includes("0x"))
+
+Terdapat satu function yang sepertinya memuat logic syarat untuk mendapatkan flag yaitu function _0xfinish(). Berdasarkan function tersebut, jika ingin mendapatkan flag, WPM harus berada di antara _0xcfg._0xmin dan _0xcfg._0xmax kemudian Accuracy harus tepat sama dengan _0xcfg._0xacc.
+
+Isi dari object _0xcfg adalah minimum dan maximum WPM, akurasi, dan waktu (dalam detik).
+const _0xcfg = {
+  _0xmin: 120,
+  _0xmax: 150,
+  _0xacc: 100,
+  _0xtl: 50,
+};
+
+Ubah object tersebut menggunakan developer tool dengan value sebagai berikut:
+_0xcfg._0xmin = 0;
+_0xcfg._0xacc = 0;
+_0xcfg._0xmax = 150;
+_0xcfg._0xtl = 100;
+
+Jalankan test nya, dan biarkan WPM dan akurasi berada di angka 0, maka kamu akan mendapatkan flagnya.
