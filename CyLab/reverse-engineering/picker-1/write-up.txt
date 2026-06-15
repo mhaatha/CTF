@@ -1,0 +1,1 @@
+Ketik "win", nanti akan muncul hexadecimal, nanti diconvert ke ASCII untuk mendapatkan flagnya.
