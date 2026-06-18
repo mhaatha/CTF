@@ -1,0 +1,3 @@
+Ini adalah sebuah program binary perulangan.
+Gunakan breakpoint di akhir program (break *main+59) lalu jalankan program dengan command run.
+Untuk mengetahui nilai akhir eax, gunakan command info registers eax.
