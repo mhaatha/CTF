@@ -1,0 +1,1 @@
+A function can be referenced by either its name or its starting address in gdb.
