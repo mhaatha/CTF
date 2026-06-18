@@ -1,0 +1,5 @@
+Gunakan command x/4xb $rbp-04 untuk melihat isi memori pada alamat rbpp-04.
+Format umumnya: x/NFU ADDRESS
+N = berapa banyak data yang ditampilkan
+F = format tampilan
+U = ukuran unit data
