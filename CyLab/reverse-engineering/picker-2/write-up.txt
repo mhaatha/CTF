@@ -1,0 +1,4 @@
+Flag sudah jelas berada di dalam function win dan program masih menangkap user input untuk menjalankan function eval.
+Namun, program melarang input win. Karena program masih menjalankan user input dengan eval, maka kita bisa menjalankan isi dari function win sebagai input.
+
+Solusi: print(open('flag.txt', 'r').read())
