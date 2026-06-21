@@ -35,3 +35,10 @@ Hint nya adalah: The flag starts with 70
 Aku udah tau flagnya itu adalah sebuah hexadecimal yang harus diubah ke ASCII, dimulai dari address 0x1184 sampai 0x11fc. Cuman aku gamau ngesolve dengan cara manual, aku masih mencari tau apakah ada sebuah register atau memory yang menghold seluruh data tersebut.
 
 Aku menggunakan PyGhidra untuk membuat proses pengambilan data hexadecimal menjadi lebih cepat
+
+Cara yang lebih efisien --> Setting a breakpoint after all the byte loads to memory, and then running this command in GDB (gdb) x/s $rbp-0x30 after pausing at the breakpoint.
+x 		--> examine memory
+/s 		--> tampilkan sebagai string
+$rbp-0x30	--> alamat yang ingin dibaca
+
+/s membaca mulai dari alamat yang ingin dibaca dan berhenti saat menemukan \0 makanya di alamat +167 terdapat mov eax, 0x0
