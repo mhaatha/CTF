@@ -1,0 +1,7 @@
+Jadi intinya program ngecompare rbp-0x8 apakah sama dengan 0x41 untuk mendapatkan flag.
+
+Yang jadi masalah, rbp-0x8 itu sudah diassign ke 0x40 dan tidak ada code yang mengubah nilai tersebut. Namun, program ini memiliki vulnerability yang dapat mengakibatkan buffer overflow karena input dari user tidak tervalidasi di bagian gets.  
+ 
+Solusi yang aku terapkan adalah melihat alamat memori rbp-0x8 dan alamat memori variabel yang menampung input user di bagian gets kemudian menghitung berapa jumlah buffer yang dibutuhkan untuk menimpa bagian rbp-0x8.
+
+Singkatnya, untuk dapat menimpa value dari rbp-0x8 menjadi 0x41, adalah dengan cara menginputkan 25 karakter yang dimana karakter ke-25 haruslah berupa char A karena char A memiliki hexadecimal value 0x41.
