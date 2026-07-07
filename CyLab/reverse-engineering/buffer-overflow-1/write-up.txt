@@ -1,0 +1,19 @@
+Ketahui terlebih dahulu besar buffer yang ditampung dengan cara:
+1. Identifikasi alamat buffer
+lea eax, [ebp-0x28]
+artinya: eax = ebp - 0x28
+
+2. Pause sebelum gets
+Pasang breakpoint di gets lalu run.
+Ketika program berhenti, lihat alamat dimulainya buffer `p/x $eax` 0xffffcd70
+
+3. Lihat memory sebelum input
+Gunakan `x/80xb $eax
+
+4. Masukkan pola
+ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ
+Dan ternyata, output berada pada alphabet VUTS pada kloter kedua dengan alamat 0xffffcd98 S T U V
+Alamat function win adalah 0x80491f6
+
+5. Buat script python yang menghasilkan output berupa karakter berjumlah 48 di mana 4 karakter terakhir haruslah berupa byte yang sesuai dengan alamat function win dalam bentuk little endian
+Karena little endian membaca dari byte yang terkecil, maka alamat 0x80491f6 dapat direpresentasikan dengan f6 91 04 08
