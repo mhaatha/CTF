@@ -1,0 +1,21 @@
+Langkah pertama yang aku lakukan adalah menganalisis file tersebut menggunakan gdb.
+
+(gdb) starti 
+Karena program tersebut merupakan executable PIE (Position Independent Executable), GDB hanya mengetahui offset dan bukan alamat virtual saat runtime. Maka dari itu program perlu dijalankan terlebih dahulu agar kernel dan dynamic loader dapat memilih alamat dasar (base address) untuk program tersebut.
+
+(gdb) info files
+Setelah program dijalankan dan berhenti tepat pada eksekusi pertama, barulah base address pada program tersebut dipetakan dengan entry point 0x5555555551c0. Karena entry point tersebut terletak di antara address .text (0x0000555555555080 - 0x00005555555558b9), maka penulis membuat breakpoint tepat di awal address dari .text yaitu 0x0000555555555080.
+
+(gdb) break *0x0000555555555080
+
+(gdb) continue
+
+(gdb) x/100i $rip
+Setelah program berhenti pada address 0x0000555555555080, penulis mengecek 100 instruksi selanjutnya setelah address 0x0000555555555080.
+
+(gdb) x/s 0x555555556004
+Penulis tertarik pada bagian yang memanggil fungsi puts karena biasanya bagian tersebut adalah tempat di mana printable character berada dan ternyata benar saja output yang dihasilkan adalah "Wrong!" yang merupakan output ketika program tersebut dijalankan.
+
+(gdb) x/4xb 0x555555555199
+0x555555555199:	0x74	0x91	0xeb	0x88
+Penulis menyadari bahwa kondisi yang menyebabkan "Wrong!" diprint berada pada address 0x555555555199 dengan instruksi je     0x55555555512c. Dengan demikian, penulis mencoba untuk memodifikasi je menjadi jne menggunakan https://hexed.it dengan mengganti 0x74 menjadi 0x75.
