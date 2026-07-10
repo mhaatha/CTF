@@ -1,0 +1,18 @@
+(gdb) x/8gx $rdi
+x = examine memory
+8 = tampilkan 8 elemen
+g = giant word (8 byte per elemen)
+x = format hexadecimal
+Dengan tujuan mengetahui isi dari alamat yang ditunjuk $rdi. Isi dari alamat yang ditunjuk $rdi adalah 0x00007fffffffdb70.
+ 
+(gdb) x/s *(char **)$rdi
+(char **) memberi tahu GDB: "anggap alamat ini menunjuk ke sebuah char *".
+(char **) adalah variabel pointer ke pointer karakter yang menyimpan alamat dari sebuah pointer karakter.
+(char **)$rdi dibaca "pointer ke char *".
+*(char **)$rdi artinya "ambil pointer tersebut".
+
+(gdb) x/s 0x00007fffffffdb70
+Berfungsi sama seperti command di atas.
+
+# Write up
+
