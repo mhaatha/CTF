@@ -1,0 +1,38 @@
+Melakukan nmap -A <IP_TARGET> karena aku ingin mengecek OS yang digunakan, versi dari service yang digunakan, informasi tambahan yang didapat dari script NSE (Nmap Scripting Engine), dan juga traceroute.
+
+Hasil scan:
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:10.10.15.225
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 1
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| -rw-r--r--    1 ftp      ftp            33 Jun 08  2021 allowed.userlist
+|_-rw-r--r--    1 ftp      ftp            62 Apr 20  2021 allowed.userlist.passwd
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Smash - Bootstrap Business Template
+Service Info: OS: Unix
+
+Dapat dilihat bahwa ftp memiliki Anonymous FTP login allowed, itu berarti kita bisa masuk ke dalam ftp dengan perintah tnftp <IP_TARGET> kemudian mengambil file yang ada di dalamnya.
+allowed.userlist  allowed.userlist.passwd
+
+Selanjutnya, aku mencoba untuk mengakses web server yang berjalan pada IP tersebut kemudian melakukan scanning directory dengan menggunakan gobuster. 
+
+gobuster dir --url 10.129.230.96 -x .php -w /home/notrhel/Tools/Words/programming-language-specific/PHP.fuzz.txt -t 20
+
+Output:
+/login.php            (Status: 200) [Size: 1577]
+Progress: 208 / 210 (99.05%)
+
+Kemudian buka http://<IP_TARGET>/login.php dan masukkan username admin dan password rKXM59ESxesUFHAd
