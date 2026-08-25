@@ -1,0 +1,1 @@
+Cukup cari input apa yang cocok untuk melewati validasi XOR yang ada di Chall.sh
