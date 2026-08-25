@@ -1,0 +1,1 @@
+strings -n 6 IronVest.exe | grep Flag
